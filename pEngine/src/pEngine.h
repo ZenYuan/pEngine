@@ -2,9 +2,9 @@
 
 // For use by Hazel applications
 
-#include "pEngine/Application.h"
-#include "pEngine/Log.h"
+#include "pEngine/core/Application.h"
+#include "pEngine/core/Log.h"
 
 // ---Entry Point---------------------
-#include "pEngine/EntryPoint.h"
+#include "pEngine/core/EntryPoint.h"
 // ----------------------------------- 

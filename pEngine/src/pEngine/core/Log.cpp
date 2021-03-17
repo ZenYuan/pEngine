@@ -7,6 +7,7 @@ namespace  pEngine {
 	std::shared_ptr<spdlog::logger> log::s_ClientLogger;
 
 	void log::Init() {
+
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 		s_CoreLogger = spdlog::stdout_color_mt("pEngine");
 		s_CoreLogger->set_level(spdlog::level::trace);
@@ -15,6 +16,3 @@ namespace  pEngine {
 	}
 
 }
-
-
-

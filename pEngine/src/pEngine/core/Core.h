@@ -7,4 +7,5 @@
 		#define DLL_API __declspec(dllimport)
 	#endif
 #else
+#error not define plateform!
 #endif
