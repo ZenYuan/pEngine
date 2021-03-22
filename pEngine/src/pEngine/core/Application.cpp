@@ -4,6 +4,7 @@
 #include "KeyEvent.h"
 #include "pepch.h"
 #include "Log.h"
+#include <GLFW/glfw3.h>
 
 namespace pEngine {
 
@@ -37,10 +38,32 @@ namespace pEngine {
 
 	void Application::Run() 
 	{
-#if 1
+#if 0
 		//assume trigger window´°¿ÚÊÂ¼þ
 		KeyPressedEvent e(static_cast<KeyCode>(65), 20);
 		OnEvent(e);
+#endif
+
+
+//window test
+#if 1
+		glfwInit();
+		GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
+		if (window == nullptr)
+		{
+			std::cout << "Failed to create GLFW window" << std::endl;
+			glfwTerminate();
+			return;
+		}
+		glfwMakeContextCurrent(window);
+		while (!glfwWindowShouldClose(window))
+		{
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+
+		glfwTerminate();
 #endif
 		while (true) 
 		{

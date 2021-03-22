@@ -1,3 +1,7 @@
-[submodule "pEngine/thirdParty/Hazel/vendor/spdlog"]
-	path = pEngine/thirdParty/Hazel/vendor/spdlog
+[submodule "pEngine/thirdParty/spdlog"]
+	path = pEngine/thirdParty/spdlog
 	url = https://github.com/gabime/spdlog
+
+submodule "pEngine/thirdParty/glfw"]
+	path = pEngine/thirdParty/glfw
+	url = https://github.com/TheCherno/glfw
