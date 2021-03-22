@@ -1,17 +1,21 @@
 #include "Application.h"
+//event register header --> window.h
 #include "ApplicationEvent.h"
-#include "Log.h"
+#include "KeyEvent.h"
+#include "pepch.h"
 
 
 namespace pEngine {
 
+#if 1
 	typedef bool(*func)(Event& e);
 
-	bool windowResize(Event& e)
+	bool KeyPressedA(KeyPressedEvent& e)
 	{
-		PE_INFO(e.GetName());
+		PE_INFO(e.GetRepeatCount());
 		return true;
 	}
+#endif
 
 	Application::Application() 
 	{
@@ -23,19 +27,21 @@ namespace pEngine {
 
 	}
 
+#if 1
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher event(e);
-		event.dispatcher<WindowResizeEvent>(windowResize);
+		event.dispatcher<KeyPressedEvent>(KeyPressedA);
 	}
-	
+#endif
 
 	void Application::Run() 
 	{
-		//assume tigger window窗口事件
-		WindowResizeEvent e(1280, 720);
+#if 1
+		//assume trigger window窗口事件
+		KeyPressedEvent e(static_cast<KeyCode>(65), 20);
 		OnEvent(e);
-
+#endif
 		while (true) 
 		{
 			//update window

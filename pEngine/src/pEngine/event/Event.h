@@ -53,7 +53,8 @@ namespace pEngine
 		{
 			if (m_event.GetEventType() == T::GetStaticType())
 			{
-				m_event.m_Handle |= func(m_event);
+				//将事件对象强制转换为触发事件对象类型，相当于父类指针转换为子类对象指针；
+				m_event.m_Handle |= func(static_cast<T&>(m_event));
 				return;
 			}
 			return;
