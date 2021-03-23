@@ -58,18 +58,18 @@ set(thirdSrc_pEngine_glfw_linux_code
 )
 
 if(WIN32)
-set(platform_code ${thirdSrc_pEngine_glfw_window_code})
-set(platform_define 
--D_GLFW_WIN32
--D_CRT_SECURE_NO_WARNINGS
-)
-message(STATUS "current platform is window")
+	set(platform_code ${thirdSrc_pEngine_glfw_window_code})
+	set(platform_define 
+	-D_GLFW_WIN32
+	-D_CRT_SECURE_NO_WARNINGS
+	)
+	message(STATUS "current platform is window")
 elseif(UNIX)
-set(platform_code ${thirdSrc_pEngine_glfw_linux_code})
-set(platform_define 
--D_GLFW_X11
-)
-message(STATUS "current platform is linux")
+	set(platform_code ${thirdSrc_pEngine_glfw_linux_code})
+	set(platform_define 
+	-D_GLFW_X11
+	)
+	message(STATUS "current platform is linux")
 endif()
 
 set(thirdSrc_pEngine_glfw_platform_code
@@ -81,6 +81,8 @@ set(thirdSrc_pEngine_glfw_platform_code
 ./thirdParty/glfw/src/monitor.c
 ./thirdParty/glfw/src/vulkan.c
 ./thirdParty/glfw/src/window.c
+./thirdParty/glfw/include/GLFW/glfw3.h
+./thirdParty/glfw/include/GLFW/glfw3native.h
 ${platform_code}
 )
 #-------------------------------------------------------------------------
@@ -102,20 +104,26 @@ include_directories(
 ./thirdParty/glfw/include
 )
 
-add_library(glfw STATIC 
-${thirdSrc_pEngine_glfw_platform_code}
-)
-
-add_library(spdlog STATIC 
-${thirdSrc_pEngine_spdlog_code}
-)
 
 add_library(pEngine SHARED 
 ${src_pEngine_core}
 ${src_pEngine_event}
+${head_pEngine}
+${thirdSrc_pEngine_spdlog_code}
+${thirdSrc_pEngine_glfw_platform_code}
 )
 
+
+#第三方库不单独建立静态库
+#[[
+add_library(glfw STATIC 
+${thirdSrc_pEngine_glfw_platform_code}
+)
+add_library(spdlog STATIC 
+${thirdSrc_pEngine_spdlog_code}
+)
 target_link_libraries(pEngine opengl32 spdlog glfw)
+]]
 
 source_group("src\\pEngine\\core" FILES ${src_pEngine_core})
 source_group("src\\pEngine\\event" FILES ${src_pEngine_event})
