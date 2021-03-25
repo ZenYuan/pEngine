@@ -63,5 +63,4 @@ namespace pEngine
 	private:
 		Event& m_event;
 	};
-
 }

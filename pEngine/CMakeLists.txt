@@ -12,6 +12,15 @@ file(GLOB src_pEngine_event
 ./src/pEngine/Event/*.h
 )
 
+#window
+#-----------------------------------platform-------------------------------
+file(GLOB src_pEngine_platform_windows_code
+	./src/platform/Windows/*.cpp
+	./src/platform/Windows/*.h
+)
+#--------------------------------------------------------------------------
+
+
 #head
 file(GLOB head_pEngine
 ./src/*.h
@@ -91,6 +100,7 @@ ${platform_code}
 add_definitions( 
 -DPLATEFORM_WINDOWS 
 -DBUILD_DLL 
+-DPE_ENABLE_ASSERTS
 -DSPDLOG_COMPILED_LIB     #spdlog
 ${platform_define}        #glfw
 )
@@ -100,6 +110,7 @@ include_directories(
 ./src
 ./src/pEngine/core
 ./src/pEngine/event
+./src/platform/Windows
 ./thirdParty/spdlog/include
 ./thirdParty/glfw/include
 )
@@ -108,11 +119,13 @@ include_directories(
 add_library(pEngine SHARED 
 ${src_pEngine_core}
 ${src_pEngine_event}
+${src_pEngine_platform_windows_code}
 ${head_pEngine}
 ${thirdSrc_pEngine_spdlog_code}
 ${thirdSrc_pEngine_glfw_platform_code}
 )
 
+target_link_libraries(pEngine opengl32)
 
 #第三方库不单独建立静态库
 #[[
@@ -127,6 +140,7 @@ target_link_libraries(pEngine opengl32 spdlog glfw)
 
 source_group("src\\pEngine\\core" FILES ${src_pEngine_core})
 source_group("src\\pEngine\\event" FILES ${src_pEngine_event})
+source_group("src\\platform\\Windows" FILES ${src_pEngine_platform_windows_code})
 source_group("src\\" FILES ${head_pEngine})
 
 #thirdParty

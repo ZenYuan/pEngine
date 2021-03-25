@@ -2,8 +2,7 @@
 //event register header --> window.h
 #include "ApplicationEvent.h"
 #include "KeyEvent.h"
-#include "pepch.h"
-#include "Log.h"
+#include <Window.h>
 #include <GLFW/glfw3.h>
 
 namespace pEngine {
@@ -16,19 +15,7 @@ namespace pEngine {
 		PE_INFO(e.GetRepeatCount());
 		return true;
 	}
-#endif
 
-	Application::Application() 
-	{
-		//create window
-		//set callback
-	}
-	Application::~Application() 
-	{
-
-	}
-
-#if 1
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher event(e);
@@ -36,38 +23,27 @@ namespace pEngine {
 	}
 #endif
 
+	Application::Application(const std::string& name) 
+	{
+		//create window
+		m_Window = Create(WindowProp(name));
+		//set callback
+		//m_Window->setEventCallBackFunc(OnEvent);
+	}
+
+	Application::~Application() 
+	{
+
+	}
+
 	void Application::Run() 
 	{
-#if 0
-		//assume trigger window´°¿ÚÊÂ¼þ
-		KeyPressedEvent e(static_cast<KeyCode>(65), 20);
-		OnEvent(e);
-#endif
-
-
-//window test
-#if 1
-		glfwInit();
-		GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
-		if (window == nullptr)
-		{
-			std::cout << "Failed to create GLFW window" << std::endl;
-			glfwTerminate();
-			return;
-		}
-		glfwMakeContextCurrent(window);
-		while (!glfwWindowShouldClose(window))
-		{
-
-			glfwSwapBuffers(window);
-			glfwPollEvents();
-		}
-
-		glfwTerminate();
-#endif
 		while (true) 
 		{
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
 			//update window
+			m_Window->OnUpdate();
 		}
 	}
 }
