@@ -48,8 +48,8 @@ namespace pEngine
 		EventDispatcher(Event& e):m_event(e){}
 
 		//不同的事件类型对应不同的事件处理函数
-		template<typename T, typename U>
-		void dispatcher(const U& func)
+		template<typename T, typename F>
+		void dispatcher(const F& func)
 		{
 			if (m_event.GetEventType() == T::GetStaticType())
 			{
@@ -57,6 +57,7 @@ namespace pEngine
 				m_event.m_Handle |= func(static_cast<T&>(m_event));
 				return;
 			}
+			PE_CORE_WARN("current event type:{0}, dispatch event type:{1}", m_event.GetEventType(), T::GetStaticType());
 			return;
 		}
 

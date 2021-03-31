@@ -1,4 +1,6 @@
 #include <WindowWindows.h>
+#include <ApplicationEvent.h>
+#include <KeyEvent.h>
 
 namespace pEngine
 {
@@ -42,7 +44,54 @@ namespace pEngine
 		//开启v-Sync，防止fps彪高
 		glfwSwapInterval(1);
 
+		//注册事件
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height )
+		{
+			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+			WinData->m_WinProp.m_Width = width;
+			WinData->m_WinProp.m_Height = height;
 
+			//调用事件回调函数
+			WindowResizeEvent event(width, height);
+			WinData->m_Func(event);
+		});
+
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow * window) 
+		{
+			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+			WindowCloseEvent event;
+			WinData->m_Func(event);
+		});
+
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scanCode, int action, int mods)
+		{
+			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+			PE_CORE_INFO("key:{0}, scancode:{1}, action:{2}", key, scanCode, action);
+
+			switch (action)
+			{
+				case GLFW_PRESS:
+				{
+					KeyPressedEvent event(static_cast<KeyCode>(key), action);
+					WinData->m_Func(event);
+					break;
+				}
+				case GLFW_RELEASE:
+				{
+					KeyReleaseEvent event(static_cast<KeyCode>(key));
+					WinData->m_Func(event);
+					break;
+				}
+				case GLFW_REPEAT:
+				{
+					KeyPressedEvent event(static_cast<KeyCode>(key), action);
+					WinData->m_Func(event);
+					break;
+				}
+				default:
+					break;
+			}
+		});
 	}
 
 	void WindowWindows::ShutDown()

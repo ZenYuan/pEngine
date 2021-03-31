@@ -15,7 +15,7 @@ namespace pEngine
 		void OnUpdate() override;
 		unsigned int GetWidth() const override { return m_WinData.m_WinProp.m_Width; }
 		unsigned int GetHeight() const override { return m_WinData.m_WinProp.m_Height; }
-		void setEventCallBackFunc(const EventCallBackFunc& func) override { m_WinData.m_Func = func; }
+		void setEventCallBackFunc(const EventCallBackFunc func) override { m_WinData.m_Func = func; }
 
 	private:
 		virtual void Init(WindowProp&);
@@ -25,7 +25,7 @@ namespace pEngine
 		struct WindowData
 		{
 			WindowProp m_WinProp;
-			Window::EventCallBackFunc m_Func;
+			EventCallBackFunc m_Func;
 		};
 		WindowData m_WinData;
 	};

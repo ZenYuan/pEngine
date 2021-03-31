@@ -26,7 +26,7 @@ namespace pEngine
 		virtual void OnUpdate() = 0;     //事件阻塞执行，相当于每帧调用；
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
-		virtual void setEventCallBackFunc(const EventCallBackFunc& func) = 0;
+		virtual void setEventCallBackFunc(const EventCallBackFunc func) = 0;
 	};
 
 	std::unique_ptr<Window> Create(WindowProp&);
