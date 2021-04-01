@@ -2,6 +2,7 @@
 //event register header --> window.h
 #include "ApplicationEvent.h"
 #include "KeyEvent.h"
+#include "MouseEvent.h"
 #include <Window.h>
 #include <GLFW/glfw3.h>
 
@@ -21,7 +22,30 @@ namespace pEngine {
 		return true;
 	}
 
-	
+	bool MPressed(MouseButtonPressedEvent& e)
+	{
+		PE_INFO("press event: code:{0}", e.GetMouseCode());
+		return true;
+	}
+
+	bool MReleased(MouseButtonReleasedEvent& e)
+	{
+		PE_INFO("release event: code:{0}", e.GetMouseCode());
+		return true;
+	}
+
+	bool MScroll(MouseScrolledEvent& e)
+	{
+		PE_INFO("scroll event: x:{0}, y:{1}", e.GetxOffset(), e.GetyOffset());
+		return true;
+	}
+
+	bool MMove(MouseMoveEvent& e)
+	{
+		PE_INFO("move event: x:{0}, y:{1}",e.GetX(), e.GetY());
+		return true;
+	}
+
 #endif
 	void Application::OnEvent(Event& e)
 	{
@@ -30,7 +54,10 @@ namespace pEngine {
 		event.dispatcher<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 		event.dispatcher<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		event.dispatcher<KeyPressedEvent>(KeyPressedA);
+		event.dispatcher<MouseButtonPressedEvent>(MPressed);
+		event.dispatcher<MouseButtonReleasedEvent>(MReleased);
+		event.dispatcher<MouseMoveEvent>(MMove);
+		event.dispatcher<MouseScrolledEvent>(MScroll);
 		//将事件分发layer层
 	}
 

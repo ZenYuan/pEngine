@@ -1,6 +1,7 @@
 #include <WindowWindows.h>
 #include <ApplicationEvent.h>
 #include <KeyEvent.h>
+#include <MouseEvent.h>
 
 namespace pEngine
 {
@@ -22,7 +23,7 @@ namespace pEngine
 		m_WinData.m_WinProp.m_Title = winprop.m_Title;
 		m_WinData.m_WinProp.m_Width = winprop.m_Width;
 		m_WinData.m_WinProp.m_Height = winprop.m_Height;
-		
+
 		PE_CORE_INFO("create window Title:{0}, Width:{1}, Height:{2}", winprop.m_Title, winprop.m_Width, winprop.m_Height);
 		//init glfwWindow
 
@@ -31,7 +32,7 @@ namespace pEngine
 			int ret = glfwInit();
 			PE_ASSERT(ret, "init GLFW is failed!");
 		}
-		
+
 		m_Window = glfwCreateWindow((int)winprop.m_Width, (int)winprop.m_Height, winprop.m_Title.c_str(), nullptr, nullptr);
 		if (!m_Window)
 		{
@@ -45,31 +46,31 @@ namespace pEngine
 		glfwSwapInterval(1);
 
 		//注册事件
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height )
-		{
-			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
-			WinData->m_WinProp.m_Width = width;
-			WinData->m_WinProp.m_Height = height;
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+				WinData->m_WinProp.m_Width = width;
+				WinData->m_WinProp.m_Height = height;
 
-			//调用事件回调函数
-			WindowResizeEvent event(width, height);
-			WinData->m_Func(event);
-		});
+				//调用事件回调函数
+				WindowResizeEvent event(width, height);
+				WinData->m_Func(event);
+			});
 
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow * window) 
-		{
-			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
-			WindowCloseEvent event;
-			WinData->m_Func(event);
-		});
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+				WindowCloseEvent event;
+				WinData->m_Func(event);
+			});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scanCode, int action, int mods)
-		{
-			WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
-			PE_CORE_INFO("key:{0}, scancode:{1}, action:{2}", key, scanCode, action);
-
-			switch (action)
 			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+				PE_CORE_INFO("key:{0}, scancode:{1}, action:{2}", key, scanCode, action);
+
+				switch (action)
+				{
 				case GLFW_PRESS:
 				{
 					KeyPressedEvent event(static_cast<KeyCode>(key), action);
@@ -89,9 +90,49 @@ namespace pEngine
 					break;
 				}
 				default:
+					PE_CORE_WARN("current Key Button action {0} not support!", action);
 					break;
-			}
-		});
+				}
+			});
+
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
+			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+
+				switch (action)
+				{
+					case GLFW_PRESS:
+					{
+						MouseButtonPressedEvent event(static_cast<MouseCode>(button));
+						WinData->m_Func(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+						WinData->m_Func(event);
+						break;
+					}
+					default:
+						PE_CORE_WARN("current Mouse Button action {0} not support!", action);
+						break;
+				}
+			});
+
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)
+			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+				MouseScrolledEvent event(xoffset, yoffset);
+				WinData->m_Func(event);
+			});
+
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)
+			{
+				WindowData* WinData = (WindowData*)glfwGetWindowUserPointer(window);
+				MouseMoveEvent event(xpos, ypos);
+				WinData->m_Func(event);
+			});
+
 	}
 
 	void WindowWindows::ShutDown()
