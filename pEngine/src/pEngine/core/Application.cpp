@@ -3,7 +3,9 @@
 #include "ApplicationEvent.h"
 #include "KeyEvent.h"
 #include "MouseEvent.h"
-#include <Window.h>
+#include "Window.h"
+#include "Layer.h"
+#include "LayerStack.h"
 #include <GLFW/glfw3.h>
 
 namespace pEngine {
@@ -54,11 +56,23 @@ namespace pEngine {
 		event.dispatcher<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 		event.dispatcher<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
+#if 0
 		event.dispatcher<MouseButtonPressedEvent>(MPressed);
 		event.dispatcher<MouseButtonReleasedEvent>(MReleased);
 		event.dispatcher<MouseMoveEvent>(MMove);
 		event.dispatcher<MouseScrolledEvent>(MScroll);
+#endif
+
 		//将事件分发layer层
+		for (auto layer : m_LayerStack)
+		{
+			//只传递一层
+			if (e.m_Handle)
+			{
+				break;
+			}
+			layer->OnEvent(e);
+		}
 	}
 
 	Application::Application(const std::string& name) 
@@ -84,7 +98,18 @@ namespace pEngine {
 			//update window
 			m_Window->OnUpdate();
 		}
+
+		std::vector<int> a;
+		a.begin();
 	}
+
+
+	void Application::PushOverLayer(Layer* layer)
+	{
+		m_LayerStack.PushOverLayer(layer);
+	}
+
+
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{

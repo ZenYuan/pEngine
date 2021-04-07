@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core.h"
+#include "pEngine/core/Core.h"
+
 namespace pEngine
 {
 	enum class EventType
@@ -64,4 +65,5 @@ namespace pEngine
 	private:
 		Event& m_event;
 	};
+
 }

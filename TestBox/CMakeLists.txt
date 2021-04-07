@@ -1,8 +1,8 @@
 
 file(GLOB src_test_code
 ./src/*.cpp
+#./src/*.h
 )
-
 
 add_definitions( -DPLATEFORM_WINDOWS )
 
